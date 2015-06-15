@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>周辺ツイート</title>
+    <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="oauth.js"></script>
+    <script type="text/javascript" src="sha1.js"></script>
+<style>
+/**
+ * Reset
+ */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+.cf:before,
+.cf:after{
+  content:"";
+  display: table;
+}
+.cf:after{
+  clear:both;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/**
+ * Content
+ */
+html,body {
+    height: 100%;
+}
+.map {
+    height: 50%;
+}
+.tweet {
+    height: 50%;
+    overflow: auto;
+}
+.tweet > li {
+    padding: 5px 10px;
+    border-bottom: dotted 1px #ccc;
+}
+.twList {
+    width: 100%;
+}
+.twList dt {
+    float: left;
+}
+.twList dd {
+    width: 100%;
+    padding: 0 5px 0 54px;
+    box-sizing: border-box;
+}
+.twList dd li {
+    padding-bottom: 5px;
+}
+.name {
+    color: #008ee0;
+}
+.date {
+    color: #999;
+    font-size: 12px;
+}
+</style>
+</head>
+<body>
+    <div id="map_canvas" class="map"></div>
+    <ul class="tweet"></ul>>
+    <!--<ul class="tweet">-->
+        <!--<li id="uniqueID" class="cf">-->
+            <!--<dl class="twList">-->
+                <!--<dt><img src="http://pbs.twimg.com/profile_images/480480542345797633/VkI0svSr_normal.png" width="48" height="48"></dt>-->
+                <!--<dd>-->
+                    <!--<ul>-->
+                        <!--<li class="name">Account Name</li>-->
+                        <!--<li class="twCont">20年ぶりくらい？に献血。今は全血400mlが基本なのね。</li>-->
+                        <!--<li class="date">2015年6月14日（日）</li>-->
+                    <!--</ul>-->
+                <!--</dd>-->
+            <!--</dl>-->
+        <!--</li>-->
+    <!--</ul>-->
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCvU6zQwQcSEhzfZKfKsBv3heVsOvU6trw&sensor=true"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script>
+        var map;
+
+        /** 自身の緯度、経度 */
+        var myLatLng;
+
+        $(function(){
+            /**
+             * 実行処理
+             **/
+            var init = function(){
+                $(window).on('load', GoogleMaps);
+            };
+
+
+
+            /** 検索対象の半径（ｍ） */
+            var radius = 1000;
+
+            /**
+             * GoogleMaps
+             **/
+            var GoogleMaps = function(){
+                // 現在位置情報を取得
+                navigator.geolocation.getCurrentPosition(function(event){
+                    // 緯度
+                    console.log(event.coords.latitude);
+                    // 経度
+                    console.log(event.coords.longitude);
+                    myLatLng = new google.maps.LatLng(event.coords.latitude, event.coords.longitude);
+                    var myMap = new google.maps.Map(document.getElementById('map_canvas'), {
+                        zoom: 15,
+                        center: myLatLng,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                        scaleControl: true,
+                        scrollwheel: false
+                    });
+                    new google.maps.Circle({
+                        center: myLatLng,       // 中心点(google.maps.LatLng)
+                        fillColor: '#ff0000',   // 塗りつぶし色
+                        fillOpacity: 0.5,       // 塗りつぶし透過度（0: 透明 ⇔ 1:不透明）
+                        map: myMap,             // 表示させる地図（google.maps.Map）
+                        radius: radius,          // 半径（ｍ）
+                        strokeColor: '#ff0000', // 外周色
+                        strokeOpacity: 1,       // 外周透過度（0: 透明 ⇔ 1:不透明）
+                        strokeWeight: 1         // 外周太さ（ピクセル）
+                    });
+
+                    // マーカーを表示
+                    var markerOptions = {
+                        position: myLatLng,
+                        map: map,
+                        title: '現在地'
+                    };
+                    var marker = new google.maps.Marker(markerOptions);
+                });
+            };
+
+
+//            /**
+//             * GoogleMaps
+//             **/
+//            var GoogleMaps = function(){
+//                var latlng = new google.maps.LatLng(35.65858, 139.745433);
+//                // マップを作成
+//                var myOptions = {
+//                    zoom: 10,
+//                    center: latlng,
+//                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+//                    disableDefaultUI: true,
+//                    scrollwheel: true,
+//                    scaleControl: false,
+//                    overviewMapControl: false
+//                };
+//                map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+//
+//                // マーカーを表示
+//                var markerOptions = {
+//                    position: latlng,
+//                    map: map,
+//                    title: '現在地'
+//                };
+//                var marker = new google.maps.Marker(markerOptions);
+//            };
+
+            /**
+             * twitter本文へスクロール
+             **/
+            var pageLink = function(){
+                var speed = 400;
+                var twID = ""; // 地図上で押されたツイートのID
+                var target = $('.'+twID);
+                var position = target.offset().top;
+                $('.tweet').animate({scrollTop:position}, speed, 'swing');
+                return false;
+            };
+
+            init();
+        });
+    </script>
+    <script type="text/javascript" src="tweet.js"></script>
+</body>
+</html>
