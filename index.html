@@ -106,20 +106,7 @@ html,body {
 <body>
     <div id="map_canvas" class="map"></div>
     <ul class="tweet"></ul>>
-    <!--<ul class="tweet">-->
-        <!--<li id="uniqueID" class="cf">-->
-            <!--<dl class="twList">-->
-                <!--<dt><img src="http://pbs.twimg.com/profile_images/480480542345797633/VkI0svSr_normal.png" width="48" height="48"></dt>-->
-                <!--<dd>-->
-                    <!--<ul>-->
-                        <!--<li class="name">Account Name</li>-->
-                        <!--<li class="twCont">20年ぶりくらい？に献血。今は全血400mlが基本なのね。</li>-->
-                        <!--<li class="date">2015年6月14日（日）</li>-->
-                    <!--</ul>-->
-                <!--</dd>-->
-            <!--</dl>-->
-        <!--</li>-->
-    <!--</ul>-->
+
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCvU6zQwQcSEhzfZKfKsBv3heVsOvU6trw&sensor=true"></script>
     <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script>
@@ -180,32 +167,6 @@ html,body {
                 });
             };
 
-
-//            /**
-//             * GoogleMaps
-//             **/
-//            var GoogleMaps = function(){
-//                var latlng = new google.maps.LatLng(35.65858, 139.745433);
-//                // マップを作成
-//                var myOptions = {
-//                    zoom: 10,
-//                    center: latlng,
-//                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-//                    disableDefaultUI: true,
-//                    scrollwheel: true,
-//                    scaleControl: false,
-//                    overviewMapControl: false
-//                };
-//                map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-//
-//                // マーカーを表示
-//                var markerOptions = {
-//                    position: latlng,
-//                    map: map,
-//                    title: '現在地'
-//                };
-//                var marker = new google.maps.Marker(markerOptions);
-//            };
 
             /**
              * twitter本文へスクロール
